@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sequência de Mídias</title>
+    <style>
+        video {
+            border-style: solid;
+            border: 2px solid red;
+            position: fixed;
+            /* right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%; */
+        }
+    </style>
+</head>
+<body>
+    <h1>SERVIDOR DE MIDIA</h1>
+    <video src="{{ url_for('video_file', filename=video_file) }}" autoplay muted loop></video>
+</body>
+</html>

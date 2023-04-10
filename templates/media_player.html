@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/htmx.org@1.8.6" integrity="sha384-Bj8qm/6B+71E6FQSySofJOUjA/gq330vEqjFx9LakWybUySyI1IQHwPtbTU7bNwx" crossorigin="anonymous"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            {#overflow: hidden;#}
+        }
+        video {
+            width: 100%;
+            height: 90vh;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <video id="video-player" autoplay muted >
+        <source src="{{ url_for('video_file') }}">
+    </video>
+</div>
+<script>
+    let $video = document.querySelector('#video-player')
+    $video.onended = function () {
+        console.log(this)
+        this.setAttribute('src', "{{ url_for('video_file') }}")
+        this.load();
+        this.play();
+    }
+</script>
+</body>
+</html>
