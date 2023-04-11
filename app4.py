@@ -1,6 +1,4 @@
-import random
-
-from flask import Flask, render_template, send_from_directory, render_template_string, send_file
+from flask import Flask, render_template, send_from_directory, render_template_string, send_file, redirect, url_for
 from pathlib import Path
 
 
@@ -8,38 +6,28 @@ app = Flask(__name__)
 
 
 # Define o diretório que contém as mídias (imagens e vídeos)
-MEDIA_FOLDER = r'static'
+MEDIA_FOLDER = r'Z:\Projects\media_server2\static'
 MEDIA_PATH = Path(MEDIA_FOLDER)
 FILE_SOURCES = list(MEDIA_PATH.glob('*'))
 
 FILE_SOURCE = r'Z:\Projects\media_server\static\video.mp4'
-
-# def get_media_from_index(index=None):
-#     media_files = list(Path(MEDIA_FOLDER).glob('*'))
-#     if not index:
-#         index = random.randrange(0, len(media_files)-1)
-#     return media_files[index]
-
-# def content_template():
-#     content_path = get_media_from_index(1)
-#     content = f'''<video src="{content_path}" autoplay loop></video>'''
-#
-#     return render_template_string(content)
-
-# @app.route('/media/<path:filename>')
-# def media(filename):
-#     # Retorna o arquivo de mídia solicitado pelo cliente
-#     return send_from_directory(MEDIA_FOLDER, filename)
-
 
 @app.route('/')
 def index():
     return render_template('index.html', file_index=0)
 
 
-# @app.route('/next_file/<index:index>')
-# def next_file(index):
-#     return render_template('index.html', file_index=index, filename=FILE_SOURCES[index])
+@app.route('/video/<int:file_index>')
+def video(file_index):
+    if file_index > (len(FILE_SOURCES) - 1):
+        return redirect(url_for('video', file_index=0))
+
+    return render_template('index.html', file=FILE_SOURCES[file_index].name, file_index=file_index)
+
+
+@app.route('/next_file')
+def next_file():
+    return FILE_SOURCE
 
 
 @app.route('/video_file')
