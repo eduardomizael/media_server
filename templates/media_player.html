@@ -1,36 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://unpkg.com/htmx.org@1.8.6" integrity="sha384-Bj8qm/6B+71E6FQSySofJOUjA/gq330vEqjFx9LakWybUySyI1IQHwPtbTU7bNwx" crossorigin="anonymous"></script>
+    <title>Sequência de Mídias</title>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            {#overflow: hidden;#}
+        body {
+            overflow: hidden;
         }
         video {
+            {#border-style: solid;#}
+            {#border: 2px solid red;#}
+            position: fixed;
+            right: 0;
+            bottom: 0;
             width: 100%;
-            height: 90vh;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
-<div>
-    <video id="video-player" autoplay muted >
-        <source src="{{ url_for('video_file') }}">
-    </video>
-</div>
-<script>
-    let $video = document.querySelector('#video-player')
-    $video.onended = function () {
-        console.log(this)
-        this.setAttribute('src', "{{ url_for('video_file') }}")
-        this.load();
-        this.play();
-    }
-</script>
+    <video id="video-player" data-index="{{ file_index }}" src="{{ url_for('static', filename=file) }}" autoplay muted></video>
 </body>
+
+<script>
+    document.querySelector("#video-player")
+        .addEventListener('ended', () => {
+            window.location.href = "{{ url_for('video', file_index=file_index + 1) }}"
+        });
+</script>
 </html>
