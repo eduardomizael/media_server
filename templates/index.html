@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Espere</title>
+    <title>Media Player</title>
     <style>
         body {
             margin: 0;
@@ -56,30 +56,130 @@
                 transform: rotate(360deg);
             }
         }
+        #player {
+            width: 500px;
+            height: 500px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-transform: uppercase;
+        }
+        .media-player {
+            {#border-style: solid;#}
+            {#border: 2px solid red;#}
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
-<div class="centered">
-    <h1>Aguarde alguns instantes</h1>
-    <h1 id="counter"></h1>
-    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+{#    <h1>Media Player do ifg</h1>#}
+
+<div id="content" class="content">
+    <div id="loader" class="centered">
+        <h1>Aguarde alguns instantes</h1>
+        <h1 id="counter"></h1>
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+    <div id="player-container" class="hide"></div>
 </div>
+
 </body>
 
 <script>
-    let time = 10;
-    let counter = document.getElementById("counter");
+    let $CONTAINER = document.getElementById('player-container');
+    let $LOADER = document.getElementById('loader');
+    let MEDIA_INDEX = -1;
+    let ITT = 30;
 
-    function updateCounter() {
-        time--;
-        {#contador.innerHTML = tempo.toString();#}
+    execute_after(5, fetchMedia)
 
-        if (time === 0) {
-            window.location.href = "{{ url_for('video', file_index=0) }}"
+    function setUpPlayer() {
+        let $player = document.querySelector(".media-player")
+        let type = $player.getAttribute('data-type');
+        ITT = parseInt($player.getAttribute('data-itt'));
+        MEDIA_INDEX = parseInt($player.getAttribute('data-index'));
+
+        if (type === 'video') {
+            $player.addEventListener('ended', () => {
+                fetchMedia();
+            });
+        } else {
+            execute_after(ITT, fetchMedia);
         }
     }
 
-    let interval = 1000;
-    let intervalId = setInterval(updateCounter, interval);
+    function fetchMedia() {
+        let index = MEDIA_INDEX + 1;
+        let url = '/media/';
+        let next_url = url + index;
+
+        fetch(next_url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(html => {
+                $CONTAINER.innerHTML = html;
+            })
+            .then(() => {
+                setUpPlayer();
+            })
+            .then(() => {
+                showPlayer();
+            })
+            .catch(error => {
+                console.error('Erro ao buscar a página: \n', error);
+                $CONTAINER.innerHTML = '';
+                showPlayer(false);
+                execute_after(10, fetchMedia);
+            });
+
+    }
+
+    function showPlayer(show=true) {
+        let $container = document.getElementById('player-container');
+        let $loader = document.getElementById('loader');
+        if (show) {
+            $container.classList.remove('hide');
+            $loader.classList.add('hide');
+        } else {
+            $container.classList.add('hide');
+            $loader.classList.remove('hide');
+        }
+    }
+
+    function execute_after(time, callback, params=[]) {
+        return setTimeout(callback, time * 1000, params);
+    }
+
+
+    {#let time = 5;#}
+    {#let counter = document.getElementById("counter");#}
+    {#function updateCounter() {#}
+    {#    time--;#}
+    {#    counter.innerHTML = time.toString();#}
+    {##}
+    {#    if (time === 0) {#}
+            {#window.location.href = "{{ url_for('video', file_index=0) }}"#}
+    {#        get_next_url(1)#}
+    {#        clearInterval(intervalId);#}
+            {#time = 10;#}
+    {#    }#}
+    {#}#}
+    {##}
+    {#let interval = 1000;#}
+    {#let intervalId = setInterval(updateCounter, interval);#}
 </script>
 </html>
