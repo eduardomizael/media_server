@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <title>Media Player</title>
     <style>
@@ -34,7 +34,6 @@
             width: 64px;
             height: 64px;
             margin: 8px;
-            border: 8px solid #000000;
             border-radius: 50%;
             animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
             border-color: #000000 transparent transparent transparent;
@@ -70,8 +69,6 @@
             text-transform: uppercase;
         }
         .media-player {
-            {#border-style: solid;#}
-            {#border: 2px solid red;#}
             position: fixed;
             right: 0;
             bottom: 0;
@@ -82,8 +79,6 @@
     </style>
 </head>
 <body>
-{#    <h1>Media Player do ifg</h1>#}
-
 <div id="content" class="content">
     <div id="loader" class="centered">
         <h1>Aguarde alguns instantes</h1>
@@ -92,7 +87,6 @@
     </div>
     <div id="player-container" class="hide"></div>
 </div>
-
 </body>
 
 <script>
@@ -164,22 +158,23 @@
         return setTimeout(callback, time * 1000, params);
     }
 
+    /*
+    let time = 5;
+    let counter = document.getElementById("counter");
+    function updateCounter() {
+        time--;
+        counter.innerHTML = time.toString();
 
-    {#let time = 5;#}
-    {#let counter = document.getElementById("counter");#}
-    {#function updateCounter() {#}
-    {#    time--;#}
-    {#    counter.innerHTML = time.toString();#}
-    {##}
-    {#    if (time === 0) {#}
+        if (time === 0) {
             {#window.location.href = "{{ url_for('video', file_index=0) }}"#}
-    {#        get_next_url(1)#}
-    {#        clearInterval(intervalId);#}
-            {#time = 10;#}
-    {#    }#}
-    {#}#}
-    {##}
-    {#let interval = 1000;#}
-    {#let intervalId = setInterval(updateCounter, interval);#}
+            get_next_url(1)
+            clearInterval(intervalId);
+            time = 10;
+        }
+    }
+
+    let interval = 1000;
+    let intervalId = setInterval(updateCounter, interval);
+    */
 </script>
 </html>

@@ -1,5 +1,4 @@
-import os
-from flask import Flask, render_template, send_from_directory, render_template_string, send_file, redirect, url_for
+from flask import Flask, render_template, redirect, url_for
 from pathlib import Path
 from waitress import serve
 import json
@@ -23,6 +22,7 @@ class Config:
             setattr(self, key, value)
 
         self.__file = Path('config.json')
+        # TODO fazer logica de salvar e carregar configurações
         # if not self.__file.exists():
         #     self.save_config()
         # else:
@@ -57,7 +57,6 @@ class Config:
                 media_files.append({'index': i, 'name': file.name, 'type': 'image'})
         self.__media_files = media_files
         return media_files
-
 
     def get_file_from_index(self, file_index=0, retry=False) -> dict[str, str] | None:
         """Retorna um arquivo de mídia a partir de um índice
@@ -102,11 +101,6 @@ def setup():
         if not file:
             return redirect(url_for('index'))
 
-        context = {
-            'file_index': file.get('index'),
-            'file_name': file.get('name'),
-            'file_type': file.get('type'),
-        }
         return render_template('media_player.html', file_index=file['index'], file_name=file['name'],
                                file_type=file['type'], itt=itt)
 
